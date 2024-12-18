@@ -1,0 +1,21 @@
+{
+  "name": "try-mern",
+  "version": "1.0.0",
+  "description": "Experience the thrill of tech with Geek's Gadget's Haven. Geek's Gadget's Haven is more than just a marketplace; it's a haven for tech enthusiasts.Built with the MERN stack, this platform offers a seamless and engaging experience for every tech enthusiast.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/index.js",
+    "dev": "nodemon ./src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.9"
+  }
+}
