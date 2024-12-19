@@ -1,17 +1,7 @@
-const express = require('express');
-const morgan = require('morgan')
-const app = express();
-app.use(morgan("dev"));
+const app = require('./app');
+const { SERVER_PORT } = require('./secret');
 
-app.listen(3000, ()=>{
-    console.log('server running on http://localhost:3000/');
+app.listen(SERVER_PORT, ()=>{
+    console.log(`server running on http://localhost:${SERVER_PORT}`);
 });
 
-
-app.get('/', (req, res)=>{
-    res.send('Welcome to home');
-});
-
-app.get('/products', (req, res)=>{
-    res.send('Show  all products');
-});
