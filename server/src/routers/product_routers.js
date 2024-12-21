@@ -1,4 +1,4 @@
-const products = require('../model/product_models')
+// const products = require('../model/product_models')
 const express = require('express');
 const createError = require('http-errors')
 const productRoute = express.Router();
@@ -11,7 +11,7 @@ const getProducts = (req, res, next) => {
     res.send(
         {
             msg : 'Show  all products',
-            data: products,
+            // data: products,
         }
     );
         
