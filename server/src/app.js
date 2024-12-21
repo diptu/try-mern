@@ -1,4 +1,6 @@
 const productRoute = require('./routers/product_routers')
+const seedRouter = require('./routers/seed_routers')
+
 const express = require('express');
 const morgan = require('morgan')
 const createError = require('http-errors')
@@ -8,7 +10,7 @@ const app = express();
 
 const limiter = rateLimit({
 	windowMs: 5 * 60 * 1000, // 5 minutes
-	limit: 20, // Limit each IP to 100 requests per `window` (here, per 5 minutes).
+	limit: 100, // Limit each IP to 100 requests per `window` (here, per 5 minutes).
 	    message: 'Too many requests',
 })
 
@@ -20,7 +22,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
+app.use('/api/seed',seedRouter);
 app.use('/api/products',productRoute);
 
 app.get('/', (req, res)=>{
