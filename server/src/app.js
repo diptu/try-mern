@@ -1,5 +1,7 @@
 const productRoute = require('./routers/product_routers')
-const seedRouter = require('./routers/seed_routers')
+const seedRouter = require('./routers/seedRouter.js')
+const userRouter = require('./routers/userRuter.js')
+
 
 const express = require('express');
 const morgan = require('morgan')
@@ -23,11 +25,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/seed',seedRouter);
-app.use('/api/products',productRoute);
+app.use('/api/seed',userRouter);
 
-app.get('/api/user', (req, res, next)=>{
-  res.status(200).send({message: 'User Profile!'});
-});
+
 app.get('/', (req, res)=>{
     res.status(200).send({message: 'welcome Home!'});
  

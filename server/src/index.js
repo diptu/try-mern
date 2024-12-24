@@ -1,6 +1,6 @@
 const app = require('./app');
 const { SERVER_PORT } = require('./secret');
-const connectionDB = require('./db');
+const connectionDB = require('./config/db');
 
 
 app.listen(SERVER_PORT, async ()=>{
