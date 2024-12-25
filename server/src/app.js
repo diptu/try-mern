@@ -1,6 +1,8 @@
 const productRoute = require('./routers/product_routers')
 const seedRouter = require('./routers/seedRouter.js')
 const userRouter = require('./routers/userRuter.js')
+const {errorResponse} = require('./helper/ResponseHandaler.js')
+
 
 
 const express = require('express');
@@ -25,7 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/seed',seedRouter);
-app.use('/api/seed',userRouter);
+app.use('/api/users',userRouter);
 
 
 app.get('/', (req, res)=>{
@@ -41,10 +43,14 @@ app.use(( req, res, next) => {
 
   // server error handling => all errors will be logged here
   app.use((err, req, res, next) => {
-     return res.status(err.status || 500).json({
-        success : false,
-        message : err.message
-        })
+    //  return res.status(err.status || 500).json({
+    //     success : false,
+    //     message : err.message
+    //     })
+      return errorResponse(res, {
+        message : err.message, 
+        statusCode : err.status
+      });
   })
 
 module.exports = app
