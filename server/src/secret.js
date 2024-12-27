@@ -8,6 +8,9 @@ const DEFAULT_USER_IMAGE = process.env.DEFAULT_USER_IMAGE || 'server/public/imag
 
 const JWT_ACTIVATION_KEY = process.env.JWT_ACTIVATION_KEY;
 const EXPIRES_IN = process.env.EXPIRES_IN;
+const SMTP_USER = process.env.SMTP_USER;
+const SMTP_PASS = process.env.SMTP_PASS;
+const CLIENT_URL = process.env.CLIENT_URL;
 
 const MONGO_DB_URL = process.env.MONGO_DB_URL || `mongodb://localhost:27017/${DB_NAME}`;
 
@@ -20,4 +23,7 @@ module.exports = {
     DEFAULT_USER_IMAGE,
     JWT_ACTIVATION_KEY,
     EXPIRES_IN,
+    SMTP_USER,
+    SMTP_PASS,
+    CLIENT_URL,
 }
