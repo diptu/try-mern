@@ -3,7 +3,8 @@ const { Pagination } = require('react-bootstrap');
 const User = require('../model/userModel');
 const { successResponse } = require('../helper/ResponseHandaler.js');
 const { deleteImage } = require('../helper/DeleteImage.js');
-const { sendEmail } = require('../helper/sendEmail.js');
+const jwt = require('jsonwebtoken');
+const sendEmail  = require('../helper/sendEmail.js');
 
 const {JWT_ACTIVATION_KEY, EXPIRES_IN, CLIENT_URL} = require('../secret.js');
 const {createJWT} = require('../helper/jsonwebtoken.js');
@@ -12,7 +13,9 @@ const {createJWT} = require('../helper/jsonwebtoken.js');
 const fs = require('fs');
 
 const { findById } = require('../services/getItemById.js');
-const { log } = require('console');
+const { console } = require('inspector');
+const { verify } = require('crypto');
+
 
 const getUsers = async (req, res, next) => {
   try {
@@ -127,8 +130,14 @@ const processSignup = async (req, res, next) => {
       subject: 'Account Activation Email',
 
       html : `<h2>Hello ${name}</h2>
-      <p>Please click the link bellow to activate your account</p>
-      <p><a href="${CLIENT_URL}/api/users/activate/${token}" target="_blank">click here</a></p>`
+     <p>To complete your account registration and gain full access to our services, please click on the following link to activate your account:</p>
+      <p><a href="${CLIENT_URL}/api/users/verify?token=${token}" target="_blank">${CLIENT_URL}/api/users/verify?token=${token}</a></p>
+      <p>If you're unable to click on the link, please copy and paste it into your web browser.
+
+Important: This activation link may expire after ${EXPIRES_IN}.
+
+If you did not request this account activation, please disregard this email.</p>`
+
     }
     //send email with Nodemailer
     try {
@@ -149,4 +158,30 @@ const processSignup = async (req, res, next) => {
   }
 
 }
-module.exports = { getUsers, getUser, deleteUser, processSignup };
+
+const activateAccount = async (req, res, next) => {
+
+  try {
+  
+    const token = req.body.token;
+    if (!token) createError(404, 'token not found!');
+    const decoded = jwt.verify(token,JWT_ACTIVATION_KEY );
+    if (!decoded) createError(401, 'Unable to verify user!');
+    console.log(decoded);
+
+    // create a new user
+    await User.create(decoded);
+    successResponse(res, {
+      message: `user created successfully`,
+      statusCode: 201,
+      payload:  {
+        token,
+      }
+    });
+  } catch (error) {
+    next(createError(404, 'Invalid token : '+error.message));
+  }
+
+}
+
+module.exports = { getUsers, getUser, deleteUser, processSignup, activateAccount, };
