@@ -24,9 +24,11 @@
   },
   "homepage": "https://github.com/diptu/try-mern#readme",
   "dependencies": {
+    "body-parser": "^2.2.1",
     "compression": "^1.8.1",
     "express": "^5.2.1",
-    "helmet": "^8.1.0"
+    "helmet": "^8.1.0",
+    "http-errors": "^2.0.1"
   },
   "devDependencies": {
     "morgan": "^1.10.1",
