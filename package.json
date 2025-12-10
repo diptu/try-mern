@@ -1,0 +1,29 @@
+{
+  "name": "try-mern",
+  "version": "1.0.0",
+  "description": "This project is a comprehensive, full-stack E-Commerce application built with the **MERN** (MongoDB, Express.js, React, Node.js) stack. It is designed not just as a functional marketplace, but as an advanced practice environment for mastering modern software engineering principles, including:",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diptu/try-mern.git"
+  },
+  "keywords": [
+    "Mern",
+    "Ecommerce"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/diptu/try-mern/issues"
+  },
+  "homepage": "https://github.com/diptu/try-mern#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    // "swagger-jsdoc": "^6.2.8",
+    // "swagger-ui-express": "^5.0.1"
+  }
+}
