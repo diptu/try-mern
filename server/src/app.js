@@ -11,19 +11,17 @@ const createError = require('http-errors');
 const { xss } = require('express-xss-sanitizer');
 const rateLimit = require('express-rate-limit');
 
+const { NODE_ENV } = require('./secret.js')
+
 // -------------------------
-// 2. App Initialization
+// 1. App Initialization
 // -------------------------
 const app = express();
 
-// -------------------------
-// 3. Environment Config
-// -------------------------
-const PORT = process.env.PORT || 3000;
-const NODE_ENV = process.env.NODE_ENV || 'development';
+
 
 // -------------------------
-// 4. Middlewares
+// 2. Middlewares
 // -------------------------
 
 // Security & Performance
@@ -58,7 +56,7 @@ const isLoggedIn = (req, res, next) => {
 };
 
 // -------------------------
-// 5. Routes
+// 3. Routes
 // -------------------------
 app.get('/health', isLoggedIn, (req, res) => {
     res.status(200).json({
@@ -69,14 +67,14 @@ app.get('/health', isLoggedIn, (req, res) => {
 });
 
 // -------------------------
-// 6. 404 Handler
+// 4. 404 Handler
 // -------------------------
 app.use((req, res, next) => {
     next(createError(404, 'Resource not found'));
 });
 
 // -------------------------
-// 7. Global Error Handler
+// 5. Global Error Handler
 // -------------------------
 app.use((err, req, res, next) => {
     res.status(err.status || 500).json({
@@ -88,4 +86,4 @@ app.use((err, req, res, next) => {
 // -------------------------
 // 8. Export
 // -------------------------
-module.exports = { app, PORT, NODE_ENV };
+module.exports = app
