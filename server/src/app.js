@@ -13,6 +13,8 @@ const rateLimit = require('express-rate-limit');
 const { NODE_ENV } = require('./secret.js')
 
 const userRouter = require('./routes/UserRouter.js');
+const SeedRouter = require('./routes/SeedRouter.js');
+
 // -------------------------
 // 1. App Initialization
 // -------------------------
@@ -46,6 +48,9 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 app.use('/api/users', userRouter);
+app.use('/api/seed', SeedRouter);
+
+
 // -------------------------
 // 3. Routes
 // -------------------------
