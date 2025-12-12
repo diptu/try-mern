@@ -4,7 +4,7 @@ users = [
         "user_id": 1001,
         "first_name": "Liam",
         "last_name": "Chen",
-        "email_address": "liam.chen@fakeshop.com",
+        "email": "liam.chen@fakeshop.com",
         "phone_number": "(555) 123-4567",
         "date_joined": "2024-01-15",
         "loyalty_tier": "Gold",

@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/diptu/try-mern#readme",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "body-parser": "^2.2.1",
     "compression": "^1.8.1",
     "dotenv": "^17.2.3",
