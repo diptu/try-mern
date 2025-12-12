@@ -10,9 +10,9 @@ const compression = require('compression');
 const createError = require('http-errors');
 const { xss } = require('express-xss-sanitizer');
 const rateLimit = require('express-rate-limit');
-
 const { NODE_ENV } = require('./secret.js')
 
+const userRouter = require('./routes/UserRouter.js');
 // -------------------------
 // 1. App Initialization
 // -------------------------
@@ -45,20 +45,11 @@ const limiter = rateLimit({
     message: "Too many requests. Please try again later."
 });
 app.use(limiter);
-
-// Example Auth Middleware
-const isLoggedIn = (req, res, next) => {
-    const isUserAuthenticated = true; // Replace with real logic
-    if (!isUserAuthenticated) {
-        return res.status(401).json({ message: 'Unauthorized' });
-    }
-    next();
-};
-
+app.use('/api/users', userRouter);
 // -------------------------
 // 3. Routes
 // -------------------------
-app.get('/health', isLoggedIn, (req, res) => {
+app.get('/health', (req, res) => {
     res.status(200).json({
         status: 'OK',
         message: 'Server is healthy!',
