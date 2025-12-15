@@ -14,7 +14,7 @@ const { NODE_ENV } = require('./secret.js')
 
 const userRouter = require('./routes/UserRouter.js');
 const SeedRouter = require('./routes/SeedRouter.js');
-
+const { errorResponse } = require('./controllers/ResponseController.js')
 // -------------------------
 // 1. App Initialization
 // -------------------------
@@ -73,10 +73,10 @@ app.use((req, res, next) => {
 // 5. Global Error Handler
 // -------------------------
 app.use((err, req, res, next) => {
-    res.status(err.status || 500).json({
-        success: false,
-        message: err.message || 'Internal Server Error',
-    });
+    return errorResponse(res, {
+        status: err.statu,
+        message: err.message
+    })
 });
 
 // -------------------------
