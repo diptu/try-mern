@@ -2,6 +2,7 @@ const createError = require("http-errors");
 const UserModel = require("../models/UserModel");
 const { DEFAULT_PAGE_SIZE } = require("../secret");
 const { successResponse } = require("./ResponseController");
+const mongoose = require("mongoose");
 
 /**
  * Escape user input for safe regex usage
@@ -81,4 +82,27 @@ const getUsers = async (req, res, next) => {
     }
 };
 
-module.exports = { getUsers };
+const getUserById = async (req, res, next) => {
+
+    try {
+        const id = String(req.params.id || "").trim();
+        const option = { 'password_hash': 0 }
+
+        const user = await UserModel.findById(id, option)
+        if (!user) {
+            throw createError(404, "No users found");
+        }
+        return successResponse(res, {
+            status: 200,
+            message: "User returned successfully",
+            payload: { user },
+        });
+    } catch (error) {
+        if (error instanceof mongoose.Error) {
+            next(createError(400, 'Invalid user id'))
+        }
+        next(error)
+    }
+
+}
+module.exports = { getUsers, getUserById };
