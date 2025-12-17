@@ -2,6 +2,9 @@ const createError = require("http-errors");
 const UserModel = require("../models/UserModel");
 const { DEFAULT_PAGE_SIZE } = require("../secret");
 const { successResponse } = require("./ResponseController");
+const { findUserById } = require("../services/user");
+
+
 const mongoose = require("mongoose");
 
 /**
@@ -88,10 +91,7 @@ const getUserById = async (req, res, next) => {
         const id = String(req.params.id || "").trim();
         const option = { 'password_hash': 0 }
 
-        const user = await UserModel.findById(id, option)
-        if (!user) {
-            throw createError(404, "No users found");
-        }
+        const user = await findUserById(id)
         return successResponse(res, {
             status: 200,
             message: "User returned successfully",
