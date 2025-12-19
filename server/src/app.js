@@ -43,12 +43,21 @@ app.use(xss());
 // Rate Limiting
 const limiter = rateLimit({
     windowMs: 1 * 60 * 1000, // 1 minute
-    max: 10,                  // limit each IP to 10 requests per window
+    max: 100,                  // limit each IP to 10 requests per window
     message: "Too many requests. Please try again later."
 });
 app.use(limiter);
 app.use('/api/users', userRouter);
 app.use('/api/seed', SeedRouter);
+
+
+// -------------------------
+// Docusarurus
+// -------------------------
+app.use(
+    "/docs",
+    express.static("../docs-site/build")
+);
 
 
 // -------------------------
