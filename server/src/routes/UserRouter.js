@@ -2,9 +2,10 @@
 const express = require('express')
 const users = require('../models/users.js')
 
-const { getUsers, getUserById, deleteUser } = require('../controllers/userController.js')
+const { getUsers, getUserById, deleteUser, registerUsers } = require('../controllers/userController.js')
 const UserRouter = express.Router()
 
+UserRouter.post('/register', registerUsers)
 
 UserRouter.get('', getUsers)
 UserRouter.get('/:id', getUserById)

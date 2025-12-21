@@ -1,9 +1,12 @@
 const createError = require("http-errors");
 const User = require("../models/UserModel");
-const { DEFAULT_PAGE_SIZE } = require("../secret");
+const { DEFAULT_PAGE_SIZE, JWT_SECRET, expiresIn } = require("../secret");
 const { successResponse } = require("./ResponseController");
 const { findItemById } = require("../services/searchItem");
 const { deleteItemById } = require("../services/deleteItem");
+const UserModel = require("../models/UserModel");
+const { tokenCreate } = require('../utils/jwtUtils')
+const bcrypt = require('bcryptjs');
 
 /**
  * Escape string for safe regex usage
@@ -96,4 +99,53 @@ const deleteUser = async (req, res, next) => {
     }
 };
 
-module.exports = { getUsers, getUserById, deleteUser };
+/**
+ * POST /users/register
+ */
+
+
+
+const registerUsers = async (req, res, next) => {
+    try {
+        const { firstname, last_name, email, password } = req.body;
+
+        const payload = { firstname, last_name, email, password }
+        if (!email || !password) {
+            throw createError(400, 'Email and password are required');
+        }
+
+        // Check if email already exists
+        const isExist = await UserModel.exists({ email });
+        if (isExist) {
+            throw createError(409, `User with email ${email} already exists`);
+        }
+
+        // Hash password
+        const password_hash = await bcrypt.hash(password, 12);
+
+        // // ✅ IMPORTANT: use password_hash
+        // const user = await UserModel.create({
+        //     firstname,
+        //     last_name,
+        //     email,
+        //     password_hash,
+        // });
+
+        const token = tokenCreate(
+            payload,
+            JWT_SECRET,
+            expiresIn
+        );
+
+        return res.status(201).json({
+            success: true,
+            message: 'User created successfully',
+            token,
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = { getUsers, getUserById, deleteUser, registerUsers };
