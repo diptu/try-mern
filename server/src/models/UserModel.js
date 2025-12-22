@@ -72,6 +72,8 @@ const UserSchema = new mongoose.Schema(
         is_active: { type: Boolean, default: true },
         is_admin: { type: Boolean, default: false },
         is_banned: { type: Boolean, default: false },
+        is_varified: { type: Boolean, default: false },
+
     },
     {
         timestamps: true,
