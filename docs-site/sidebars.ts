@@ -4,7 +4,7 @@ module.exports = {
     {
       type: "category",
       label: "API",
-      items: ["api/health"],
+      items: ["api/health", "api/user-api"],
     },
     {
       type: 'category',
