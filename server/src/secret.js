@@ -29,6 +29,9 @@ const SMTP_APP_PASSWORD = process.env.SMTP_APP_PASSWORD;
 
 
 
+
+
+
 if (!JWT_SECRET) {
     throw new Error("FATAL ERROR: JWT_SECRET is not defined.");
 }

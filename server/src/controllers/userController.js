@@ -105,14 +105,13 @@ const deleteUser = async (req, res, next) => {
 /**
  * POST /users/register
  */
-
-
-/**
- * POST /users/register
- */
 const registerUsers = async (req, res, next) => {
     try {
-        const { first_name, last_name, email, password } = req.body;
+        const { first_name, last_name, email, password, phone_number, address } = req.body;
+
+        const image = req.file
+            ? req.file.path.replace(/\\/g, '/') // windows-safe
+            : undefined;
 
         // Required fields
         if (!last_name || !email || !password) {
@@ -134,6 +133,9 @@ const registerUsers = async (req, res, next) => {
             last_name,
             email,
             password_hash,
+            phone_number,
+            address,
+            image,
             is_verified: false,
         });
 
@@ -213,27 +215,23 @@ const registerUsers = async (req, res, next) => {
 /**
  * GET /users/verify
  */
-
-/**
- * GET /users/verify
- */
 const verifyUser = async (req, res, next) => {
     try {
-        const token = String(req.query.token || "").trim();
+        const token = String(req.query.token || '').trim();
 
         if (!token) {
-            throw createError(400, "Activation token is required");
+            throw createError(400, 'Activation token is required');
         }
 
         let decoded;
         try {
             decoded = verifyToken(token, JWT_SECRET);
         } catch (err) {
-            if (err.message === "TOKEN_EXPIRED") {
-                throw createError(401, "Activation link has expired");
+            if (err.message === 'TOKEN_EXPIRED') {
+                throw createError(401, 'Activation link has expired');
             }
-            if (err.message === "INVALID_TOKEN") {
-                throw createError(401, "Invalid activation token");
+            if (err.message === 'INVALID_TOKEN') {
+                throw createError(401, 'Invalid activation token');
             }
             throw err;
         }
@@ -241,34 +239,37 @@ const verifyUser = async (req, res, next) => {
         const { userId, email } = decoded;
 
         if (!userId || !email) {
-            throw createError(400, "Invalid activation payload");
+            throw createError(400, 'Invalid activation payload');
         }
 
         const user = await UserModel.findOne({ _id: userId, email });
 
         if (!user) {
-            throw createError(404, "User not found");
+            throw createError(404, 'User not found');
         }
 
-        if (user.is_verified) {
+        // ✅ Already verified
+        if (user.is_verified === true) {
             return successResponse(res, {
                 status: 200,
-                message: "Account already activated",
+                message: 'Account already activated',
             });
         }
 
+        // ✅ Activate account
         user.is_verified = true;
-        await user.save();
+        await user.save({ validateBeforeSave: false });
 
         return successResponse(res, {
             status: 200,
-            message: "Account activated successfully",
+            message: 'Account activated successfully',
         });
 
     } catch (error) {
         next(error);
     }
 };
+
 
 
 module.exports = { getUsers, getUserById, deleteUser, registerUsers, verifyUser };

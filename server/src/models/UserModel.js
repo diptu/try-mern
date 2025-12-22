@@ -43,6 +43,7 @@ const UserSchema = new mongoose.Schema(
         },
 
         phone_number: { type: String, trim: true },
+        address: { type: String, trim: true, lowercase: true, },
 
         // --- Security ---
         password_hash: {
@@ -65,14 +66,14 @@ const UserSchema = new mongoose.Schema(
             set: normalizeLoyaltyTier,
         },
 
-        // --- Relations ---
-        address_id: { type: mongoose.Schema.Types.ObjectId, ref: "Address" },
+        // // --- Relations ---
+        // address_id: { type: mongoose.Schema.Types.ObjectId, ref: "Address" },
 
         // --- Flags ---
         is_active: { type: Boolean, default: true },
         is_admin: { type: Boolean, default: false },
         is_banned: { type: Boolean, default: false },
-        is_varified: { type: Boolean, default: false },
+        is_verified: { type: Boolean, default: false },
 
     },
     {
