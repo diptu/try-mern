@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Image, Table } from 'antd';
+import { Button, Image, Table, Modal, Form, Input, Select } from 'antd';
 import { PlusCircleOutlined, EditFilled, DeleteFilled } from '@ant-design/icons';
 
 import './App.css'
@@ -72,8 +72,14 @@ const columns = [
           icon={<DeleteFilled />}
         />
       </div>
+
     )
   }
+];
+
+const genderOptions = [
+  { value: 'Male', label: 'Male' },
+  { value: 'Female', label: 'Female' },
 ];
 
 const App = () => (
@@ -93,7 +99,66 @@ const App = () => (
         pagination={{ pageSize: 5, position: ['bottomCenter'] }}
         scroll={{ x: 'max-content' }} />;
     </div>
-  </div>
+    <Modal
+      open={true}
+      footer={null}
+      title={
+        <h1 className='text-xl font-semibold'>Registration Form</h1>
+      }
+
+    >
+      <Form layout='vertical' className='font-semibold' initialValues={{ gender: undefined }}>
+        <div className='grid md:grid-clo-2 gap-x-2'>
+          <Form.Item
+            label='profile'
+            name='profile'
+          >
+            <Input type="file" size='large' style={{ borderRadius: 8 }}></Input>
+          </Form.Item>
+
+          <Form.Item
+            label='fullname'
+            name='fullname'
+            rules={[{ required: true }]}
+          >
+            <Input type="text" size='large' style={{ borderRadius: 8 }}></Input>
+          </Form.Item>
+
+          <Form.Item
+            label='email'
+            name='email'
+            rules={[{ required: true }]}
+          >
+            <Input type="email" size='large' style={{ borderRadius: 8 }}></Input>
+          </Form.Item>
+          <Form.Item
+            label='mobile'
+            name='mobile'
+            rules={[{ required: true }]}
+          >
+            <Input type="text" size='large' style={{ borderRadius: 8 }}></Input>
+          </Form.Item>
+          <Form.Item
+            label='DOB'
+            name='dob'
+            rules={[{ required: true }]}
+          >
+            <Input type="date" size='large' style={{ borderRadius: 8 }}></Input>
+          </Form.Item>
+          <Form.Item
+            label='Gender'
+            name='gender'
+            rules={[{ required: true }]}
+          >
+            <Select
+              options={genderOptions}
+              placeholder="Select gender"
+            />
+          </Form.Item>
+        </div>
+      </Form>
+    </Modal>
+  </div >
 );
 
 export default App
