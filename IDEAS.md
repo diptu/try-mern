@@ -1,4 +1,4 @@
-# Ecommerce - RAG IDEAS
+# Ecommerce - RAG & Visual Project Concepts
 
 ## 1. Discovery & Conversational Search
 ### 🛍️ Context-Aware Shopping Assistant
@@ -43,3 +43,21 @@ Reduce customer support ticket volume by letting a RAG bot handle self-service i
 **RAG Action:** Retrieves your application's return_policy.md or legal FAQ chunks regarding electronics and international exceptions.
 
 **Generated Output:** "Yes, according to our electronics policy, opened items can be returned within 14 days, but international returns from Canada are subject to a $10 restocking fee."
+
+
+### 📸 Multimodal "Complete the Look" Discovery Assistant
+
+**The Concept:** Enhances the Context-Aware Shopping Assistant by allowing users to upload an image of a styled outfit or room aesthetic and add natural language text constraints to find matching products in stock.
+
+**User Scenario:** Uploads a photo of an influencer wearing a full street-style outfit.
+
+**Text Prompt:** "Find me a formal version of these pants, but under $120 and available in Size 32."
+
+
+### 🔍 Visual-Textual Multi-Product Comparison Engine
+
+**The Concept:** Users select two or more visually discovered items and prompt the system to cross-examine their physical attributes alongside user reviews.
+
+**User Scenario:** The user draws bounding boxes around two different dining chairs displayed in a catalog lifestyle photo.
+
+**Text Prompt:** "Compare the durability of these two chairs based on customer reviews. Which fabric stains less?"

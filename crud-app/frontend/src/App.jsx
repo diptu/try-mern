@@ -1,164 +1,440 @@
-import React from 'react';
-import { Button, Image, Table, Modal, Form, Input, Select } from 'antd';
-import { PlusCircleOutlined, EditFilled, DeleteFilled } from '@ant-design/icons';
+import React, { useState } from 'react';
 
-import './App.css'
+import {
+  Button,
+  Image,
+  Table,
+  Modal,
+  Form,
+  Input,
+  InputNumber,
+} from 'antd';
 
-const dataSource = [
+import {
+  PlusCircleOutlined,
+  EditFilled,
+  DeleteFilled,
+  PlusOutlined,
+} from '@ant-design/icons';
+
+import './App.css';
+
+const initialProducts = [
   {
     key: '1',
-    name: 'Mike',
-    profile: <Image
-      width={200}
-      alt="basic"
-      src="https://cdn-icons-png.flaticon.com/512/6733/6733137.png"
-    />,
-    age: 32,
-    address: '10 Downing Street',
+    title: 'Mechanical Keyboard K2',
+    brand: 'Keychron',
+    description: 'Wireless mechanical keyboard',
+    price: 89,
+    discountPrice: 79,
+    stock: 45,
+    images: [
+      {
+        url: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=200&q=80',
+        altText: 'Mechanical Keyboard Front View',
+      },
+    ],
   },
   {
     key: '2',
-    name: 'John',
-    profile: <Image
-      width={200}
-      alt="basic"
-      src="https://cdn-icons-png.flaticon.com/512/6733/6733137.png"
-    />,
-    age: 42,
-    address: '10 Downing Street',
+    title: 'Gaming Mouse',
+    brand: 'Logitech',
+    description: 'High precision wireless mouse',
+    price: 99,
+    discountPrice: 89,
+    stock: 12,
+    images: [
+      {
+        url: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=200&q=80',
+        altText: 'Gaming Mouse Side View',
+      },
+    ],
   },
 ];
 
-const columns = [
-  {
-    title: 'Name',
+const App = () => {
+  const [modal, setModal] = useState(false);
+  const [form] = Form.useForm();
 
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    profile: 'profile',
-    dataIndex: 'profile',
-    key: 'profile',
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-  },
-  {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-  },
-  {
-    title: 'Action',
-    dataIndex: 'Action',
-    key: 'Action',
+  const [products, setProducts] = useState(initialProducts);
 
-    render: (_, record) => (
-      <div className="flex gap-2">
-        <Button
-          type="text"
-          className="hover:bg-green-50"
-          style={{ color: '#16a34a' }}
-          icon={<EditFilled />}
+  const columns = [
+    {
+      title: 'Image',
+      dataIndex: 'images',
+      key: 'images',
 
+      render: (images) => (
+        <Image
+          width={70}
+          height={70}
+          className="object-cover rounded"
+          alt={images?.[0]?.altText || 'Product'}
+          src={
+            images?.[0]?.url ||
+            'https://placehold.co/70x70?text=No+Image'
+          }
         />
+      ),
+    },
+
+    {
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
+    },
+
+    {
+      title: 'Brand',
+      dataIndex: 'brand',
+      key: 'brand',
+    },
+
+    {
+      title: 'Price',
+      dataIndex: 'price',
+      key: 'price',
+
+      render: (price) => `$${price}`,
+    },
+
+    {
+      title: 'Discount Price',
+      dataIndex: 'discountPrice',
+      key: 'discountPrice',
+
+      render: (discountPrice) =>
+        discountPrice ? (
+          `$${discountPrice}`
+        ) : (
+          <span className="text-gray-400">-</span>
+        ),
+    },
+
+    {
+      title: 'Stock',
+      dataIndex: 'stock',
+      key: 'stock',
+
+      render: (stock) => (
+        <span
+          className={
+            stock < 10
+              ? 'text-red-500 font-semibold'
+              : 'text-green-600'
+          }
+        >
+          {stock} units
+        </span>
+      ),
+    },
+
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      key: 'action',
+
+      render: (_, record) => (
+        <div className="flex gap-2">
+          <Button
+            type="text"
+            icon={<EditFilled />}
+            style={{ color: '#16a34a' }}
+          />
+
+          <Button
+            type="text"
+            icon={<DeleteFilled />}
+            style={{ color: '#ff0000' }}
+          />
+        </div>
+      ),
+    },
+  ];
+
+  const onFinish = (values) => {
+    const slug = values.title
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/(^-|-$)+/g, '');
+
+    const newProduct = {
+      key: Date.now().toString(),
+
+      title: values.title,
+      slug,
+      description: values.description,
+      brand: values.brand,
+      price: values.price,
+      discountPrice: values.discountPrice,
+      stock: values.stock,
+
+      images: [
+        {
+          url: values.imageUrl,
+          altText: values.altText,
+        },
+      ],
+    };
+
+    console.log('Product Payload:', newProduct);
+
+    setProducts([...products, newProduct]);
+
+    form.resetFields();
+    setModal(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-100 flex flex-col items-center md:p-4">
+      {/* Header */}
+      <div className="flex justify-between items-center bg-emerald-600 w-10/12 my-5 p-4 rounded shadow">
+        <h1 className="capitalize font-bold text-white text-xl">
+          Product Inventory Manager
+        </h1>
+
         <Button
-          type="text"
-          className="hover:danger"
-          style={{ color: '#FF0000' }}
-          icon={<DeleteFilled />}
+          type="primary"
+          size="large"
+          icon={<PlusCircleOutlined />}
+          onClick={() => setModal(true)}
+          className="text-white font-semibold shadow-md hover:shadow-xl transition-all duration-300 border-2"
+          style={{
+            borderRadius: '8px',
+          }}
+        >
+          Add Product
+        </Button>
+      </div>
+
+      {/* Table */}
+      <div className="w-10/12 bg-white p-4 rounded shadow">
+        <Table
+          dataSource={products}
+          columns={columns}
+          pagination={{
+            pageSize: 5,
+            position: ['bottomCenter'],
+          }}
+          scroll={{ x: 'max-content' }}
         />
       </div>
 
-    )
-  }
-];
+      {/* Modal */}
+      <Modal
+        open={modal}
+        footer={null}
+        width={750}
+        onCancel={() => {
+          setModal(false);
+          form.resetFields();
+        }}
+        title={
+          <h1 className="text-xl font-semibold">
+            Add New Product
+          </h1>
+        }
+      >
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+          initialValues={{
+            stock: 0,
+          }}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
+            {/* Product Title */}
+            <Form.Item
+              label="Product Title"
+              name="title"
+              rules={[
+                {
+                  required: true,
+                  message: 'Product title is required',
+                },
+                {
+                  max: 200,
+                  message:
+                    'Title cannot exceed 200 characters',
+                },
+              ]}
+            >
+              <Input
+                size="large"
+                placeholder="Enter product title"
+                style={{ borderRadius: 0 }}
+              />
+            </Form.Item>
 
-const genderOptions = [
-  { value: 'Male', label: 'Male' },
-  { value: 'Female', label: 'Female' },
-];
+            {/* Brand */}
+            <Form.Item
+              label="Brand"
+              name="brand"
+              rules={[
+                {
+                  required: true,
+                  message: 'Brand name is required',
+                },
+              ]}
+            >
+              <Input
+                size="large"
+                placeholder="Enter brand name"
+                style={{ borderRadius: 0 }}
+              />
+            </Form.Item>
 
-const App = () => (
+            {/* Price */}
+            <Form.Item
+              label="Price"
+              name="price"
+              rules={[
+                {
+                  required: true,
+                  message: 'Price is required',
+                },
+              ]}
+            >
+              <InputNumber
+                min={0}
+                size="large"
+                className="w-full"
+                placeholder="0.00"
+                style={{ borderRadius: 0 }}
+              />
+            </Form.Item>
 
+            {/* Discount Price */}
+            <Form.Item
+              label="Discount Price"
+              name="discountPrice"
+              dependencies={['price']}
+              rules={[
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (
+                      !value ||
+                      value < getFieldValue('price')
+                    ) {
+                      return Promise.resolve();
+                    }
 
+                    return Promise.reject(
+                      new Error(
+                        'Discount price must be lower than original price'
+                      )
+                    );
+                  },
+                }),
+              ]}
+            >
+              <InputNumber
+                min={0}
+                size="large"
+                className="w-full"
+                placeholder="0.00"
+                style={{ borderRadius: 0 }}
+              />
+            </Form.Item>
 
-  <div className="min-h-screen bg-rose-100 flex flex-col items-center md:p-4">
-    <div className='flex justify-between items-center  bg-blue-600 w-10/12 my-5 p-4'>
-      <h1 className='capitalize font-bold text-white text-xl'>Mern Crud app</h1>
-      <Button icon={<PlusCircleOutlined />}></Button>
+            {/* Stock */}
+            <Form.Item
+              label="Stock Quantity"
+              name="stock"
+              rules={[
+                {
+                  required: true,
+                  message:
+                    'Stock quantity is required',
+                },
+              ]}
+            >
+              <InputNumber
+                min={0}
+                size="large"
+                className="w-full"
+                placeholder="0"
+                style={{ borderRadius: 0 }}
+              />
+            </Form.Item>
 
-    </div>
-    <div className='w-10/12'>
-      <Table
-        dataSource={dataSource}
-        columns={columns}
-        pagination={{ pageSize: 5, position: ['bottomCenter'] }}
-        scroll={{ x: 'max-content' }} />;
-    </div>
-    <Modal
-      open={true}
-      footer={null}
-      title={
-        <h1 className='text-xl font-semibold'>Registration Form</h1>
-      }
+            {/* Product Image URL */}
+            <Form.Item
+              label="Product Image URL"
+              name="imageUrl"
+              rules={[
+                {
+                  required: true,
+                  message:
+                    'Product image URL is required',
+                },
+              ]}
+            >
+              <Input
+                size="large"
+                placeholder="https://example.com/product.png"
+                style={{ borderRadius: 0 }}
+              />
+            </Form.Item>
 
-    >
-      <Form layout='vertical' className='font-semibold' initialValues={{ gender: undefined }}>
-        <div className='grid md:grid-clo-2 gap-x-2'>
+            {/* Alt Text */}
+            <Form.Item
+              label="Image Alt Text"
+              name="altText"
+              rules={[
+                {
+                  required: true,
+                  message: 'Image alt text is required',
+                },
+              ]}
+            >
+              <Input
+                size="large"
+                placeholder="e.g. Mechanical Keyboard Front View"
+                style={{ borderRadius: 0 }}
+              />
+            </Form.Item>
+          </div>
+
+          {/* Description */}
           <Form.Item
-            label='profile'
-            name='profile'
+            label="Description"
+            name="description"
+            rules={[
+              {
+                required: true,
+                message:
+                  'Product description is required',
+              },
+            ]}
           >
-            <Input type="file" size='large' style={{ borderRadius: 8 }}></Input>
-          </Form.Item>
-
-          <Form.Item
-            label='fullname'
-            name='fullname'
-            rules={[{ required: true }]}
-          >
-            <Input type="text" size='large' style={{ borderRadius: 8 }}></Input>
-          </Form.Item>
-
-          <Form.Item
-            label='email'
-            name='email'
-            rules={[{ required: true }]}
-          >
-            <Input type="email" size='large' style={{ borderRadius: 8 }}></Input>
-          </Form.Item>
-          <Form.Item
-            label='mobile'
-            name='mobile'
-            rules={[{ required: true }]}
-          >
-            <Input type="text" size='large' style={{ borderRadius: 8 }}></Input>
-          </Form.Item>
-          <Form.Item
-            label='DOB'
-            name='dob'
-            rules={[{ required: true }]}
-          >
-            <Input type="date" size='large' style={{ borderRadius: 8 }}></Input>
-          </Form.Item>
-          <Form.Item
-            label='Gender'
-            name='gender'
-            rules={[{ required: true }]}
-          >
-            <Select
-              options={genderOptions}
-              placeholder="Select gender"
+            <Input.TextArea
+              rows={4}
+              placeholder="Write product description..."
+              style={{ borderRadius: 0 }}
             />
           </Form.Item>
-        </div>
-      </Form>
-    </Modal>
-  </div >
-);
 
-export default App
+          {/* Submit */}
+          <Form.Item>
+            <Button
+              block
+              size="large"
+              type="primary"
+              htmlType="submit"
+              icon={<PlusOutlined />}
+              className="bg-emerald-600 hover:bg-emerald-700"
+              style={{ borderRadius: 0 }}
+            >
+              Save Product
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
+    </div>
+  );
+};
+
+export default App;

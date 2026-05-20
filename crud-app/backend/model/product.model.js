@@ -40,7 +40,7 @@ const ProductSchema = new Schema({
         }
     },
     // Media arrays
-    mages: {
+    images: {
         type: [{
             url: { type: String, required: true },
             altText: { type: String, trim: true }
